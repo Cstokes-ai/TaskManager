@@ -1,0 +1,26 @@
+#File TaskMain.py
+import tkinter as tk
+import NavigationPanel form nav.py
+import other functions
+THis will be done in Object oriented programming
+-----------------------------------------------------------------------------------------------------------------------
+Define Class MainApp:
+initialize window
+Set window title
+Creat nav panel on left for different sections (processes, cpu/memory,sys logs, graph data, settings, Logout
+Create main content on right
+Create footer
+Create main event loop
+-----------------------------------------------------------------------------------------------------------------------
+navigation.py
+Define class NavigationPanel:
+Create class NavigationPanel:
+Create a panel on left side of the window
+Create buttons for different sections
+Create event handlers for each button(Page switching)
+
+-----------------------------------------------------------------------------------------------------------------------
+Processes.py
+Define class Processes:
+import Psutil as ps
+Create Header section for
