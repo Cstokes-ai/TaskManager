@@ -18,9 +18,62 @@ Create class NavigationPanel:
 Create a panel on left side of the window
 Create buttons for different sections
 Create event handlers for each button(Page switching)
+-----------------------------------------------------------------------------------------------------------------------
+Pages.py
+Import tkinter as tk
+Import psutil
+Import matplotlib.pyplot as plt
+Import GraphFrame from graph.py
+
+
+Define Class HomePage:
+    Initialize with reference to main app
+    Display welcome message and quick summary
+
+Define Class CPUPage:
+    Initialize frame
+    Fetch CPU usage using psutil
+    Display CPU load
+    Add Refresh button to update metrics
+
+Define Class MemoryPage:
+    Initialize frame
+    Fetch Memory usage using psutil
+    Display memory stats
+    Add Refresh button
+
+Define Class ProcessPage:
+    Initialize frame
+    Fetch list of running processes using psutil
+    Display in table format
+    Add Search bar and Terminate button
+    Define Method terminate_process():
+        Kill selected process
+
+Define Class SchedulingPage:
+    Initialize frame
+    Display process scheduling details
+
+------------------------------------------------
+
+# File: graph.py
+Import matplotlib.pyplot as plt
+Import tkinter as tk
+Import FigureCanvasTkAgg from matplotlib.backends.backend_tkagg
+
+Define Class GraphFrame:
+    Initialize with reference to main app
+    Create Matplotlib figure
+    Fetch and plot CPU & Memory trends
 
 -----------------------------------------------------------------------------------------------------------------------
-Processes.py
-Define class Processes:
-import Psutil as ps
-Create Header section for
+
+# File: auth.py
+Import tkinter as tk
+
+Define Class LoginPage:
+    Initialize frame
+    Create Username & Password fields
+    Add Login button
+    Validate user credentials
+    If success, load MainApplication
