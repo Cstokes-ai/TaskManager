@@ -1,7 +1,8 @@
+import sqlite3
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
-from UPScript import login_user
+
 
 class Login(tk.Frame):
     def __init__(self, parent, controller):
@@ -11,7 +12,8 @@ class Login(tk.Frame):
 
     def create_widgets(self):
         # Load the background image using PIL
-        image = Image.open(r"C:\Users\corne\OneDrive\Pictures\msi_3d_logo__tech_background_2_by_beman36_dgmknqa-fullview.jpg")
+        image = Image.open(
+            r"C:\Users\corne\OneDrive\Pictures\msi_3d_logo__tech_background_2_by_beman36_dgmknqa-fullview.jpg")
         self.background_image = ImageTk.PhotoImage(image)
 
         # Create a label to hold the background image
@@ -40,6 +42,33 @@ class Login(tk.Frame):
 
         if login_user(username, password):
             messagebox.showinfo("Login Successful", "Welcome!")
-            self.controller.show_frame("HomePage")
+
+            # Clear input fields after login
+            self.username_entry.delete(0, tk.END)
+            self.password_entry.delete(0, tk.END)
+
+            self.controller.show_frame("HomePage")  # Switch to HomePage
         else:
             messagebox.showerror("Login Failed", "Invalid username or password")
+
+
+def login_user(username, password):
+    # Connect to the database
+    conn = sqlite3.connect('user_management.db')
+    cursor = conn.cursor()
+
+    # Check if the user exists
+    cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+    user = cursor.fetchone()
+
+    if user:
+        # User exists, validate password
+        if user[2] == password:  # Assuming password is the third column
+            conn.close()
+            return True
+        else:
+            conn.close()
+            return False
+    else:
+        conn.close()
+        return False
