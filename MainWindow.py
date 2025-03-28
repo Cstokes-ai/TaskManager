@@ -1,4 +1,7 @@
 import tkinter as tk
+from PIL import Image, ImageTk
+
+from CPU import CPUPage
 from Homepage import HomePage
 from Login import Login
 
@@ -7,6 +10,14 @@ class MainWindow(tk.Tk):
         super().__init__()
         self.title("System Tracker & Task Manager")
         self.geometry("800x600")
+
+        # Load the background image using PIL
+        image = Image.open(r"C:\Users\corne\OneDrive\Pictures\msi_3d_logo__tech_background_2_by_beman36_dgmknqa-fullview.jpg")
+        self.background_image = ImageTk.PhotoImage(image)
+
+        # Create a label to hold the background image
+        background_label = tk.Label(self, image=self.background_image)
+        background_label.place(relwidth=1, relheight=1)
 
         # Container to hold all frames
         self.container = tk.Frame(self)
@@ -34,6 +45,7 @@ class MainWindow(tk.Tk):
         login_button.pack(pady=20)
 
         self.frames["Welcome"] = welcome_frame
+        welcome_frame.tkraise()
 
     def show_frame(self, page_name):
         # Destroy the current frame if it exists
@@ -46,6 +58,8 @@ class MainWindow(tk.Tk):
             frame = HomePage(self.container, self)
         elif page_name == "Login":
             frame = Login(self.container, self)
+        elif page_name == "CPUPage":  # Add this line
+            frame = CPUPage(self.container, self)  # Instantiate CPUPage
 
         self.frames[page_name] = frame
         frame.pack(fill="both", expand=True)

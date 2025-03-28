@@ -19,7 +19,7 @@ Create a panel on left side of the window
 Create buttons for different sections
 Create event handlers for each button(Page switching)
 -----------------------------------------------------------------------------------------------------------------------
-Pages.py
+Pages.py(Each is own Individual Page)
 Import tkinter as tk
 Import psutil
 Import matplotlib.pyplot as plt
