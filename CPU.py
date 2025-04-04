@@ -13,12 +13,17 @@ class CPUPage(tk.Frame):
 
     def create_widgets(self):
         # Title
-        ttk.Label(self, text="CPU & Memory Usage", font=("Arial", 16, "bold")).pack(pady=10)
+        title_label = ttk.Label(self, text="CPU & Memory Usage", font=("Arial", 18, "bold"), foreground="green")
+        title_label.pack(pady=10)
 
-        # Back Button
-        back_button = ttk.Button(self, text="Back", command=lambda: self.controller.show_frame("HomePage"))
-        back_button.pack(pady=5)
-        back_button.lift()
+        # Return to Homepage Button (Top Right)
+        back_button = ttk.Button(self, text="Return to Homepage", command=lambda: self.controller.show_frame("HomePage"))
+        back_button.place(relx=0.95, rely=0.02, anchor="ne", width=150, height=30)
+
+        # Frame for Stats
+        stats_frame = ttk.Frame(self)
+        stats_frame.pack(pady=10, padx=10, fill=tk.X)
+
         # CPU and Memory Stats
         self.cpu_usage = tk.StringVar()
         self.memory_usage = tk.StringVar()
@@ -28,32 +33,29 @@ class CPUPage(tk.Frame):
         self.memory_free = tk.StringVar()
         self.memory_cached = tk.StringVar()
 
-        image = Image.open(
-            r"C:\Users\corne\OneDrive\Pictures\msi_3d_logo__tech_background_2_by_beman36_dgmknqa-fullview.jpg")
-        self.background_image = ImageTk.PhotoImage(image)
-
-        # Create a label to hold the background image
-        background_label = tk.Label(self, image=self.background_image)
-        background_label.place(relwidth=1, relheight=1)
-
-        # Display for CPU and memory stats
-        ttk.Label(self, textvariable=self.cpu_usage, font=("Arial", 12)).pack()
-        ttk.Label(self, textvariable=self.cpu_load, font=("Arial", 12)).pack()
+        # CPU and Memory Stats Labels
+        ttk.Label(stats_frame, textvariable=self.cpu_usage, font=("Arial", 12), background="darkslategray", foreground="white").pack()
+        ttk.Label(stats_frame, textvariable=self.cpu_load, font=("Arial", 12), background="darkslategray", foreground="white").pack()
         for i, var in enumerate(self.cpu_per_core):
-            ttk.Label(self, textvariable=var, font=("Arial", 12)).pack()
-        ttk.Label(self, textvariable=self.memory_usage, font=("Arial", 12)).pack()
-        ttk.Label(self, textvariable=self.memory_used, font=("Arial", 12)).pack()
-        ttk.Label(self, textvariable=self.memory_free, font=("Arial", 12)).pack()
-        ttk.Label(self, textvariable=self.memory_cached, font=("Arial", 12)).pack()
+            ttk.Label(stats_frame, textvariable=var, font=("Arial", 12), background="darkslategray", foreground="white").pack()
+        ttk.Label(stats_frame, textvariable=self.memory_usage, font=("Arial", 12), background="darkslategray", foreground="white").pack()
+        ttk.Label(stats_frame, textvariable=self.memory_used, font=("Arial", 12), background="darkslategray", foreground="white").pack()
+        ttk.Label(stats_frame, textvariable=self.memory_free, font=("Arial", 12), background="darkslategray", foreground="white").pack()
+        ttk.Label(stats_frame, textvariable=self.memory_cached, font=("Arial", 12), background="darkslategray", foreground="white").pack()
 
         # Graph Frame
-        self.frame = ttk.Frame(self)
-        self.frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        graph_frame = ttk.Frame(self)
+        graph_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        # Matplotlib Figure
-        self.fig, self.ax = plt.subplots()
-        self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
-        self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        # Matplotlib Figures for CPU and Memory
+        self.fig_cpu, self.ax_cpu = plt.subplots()
+        self.fig_mem, self.ax_mem = plt.subplots()
+
+        # Create Canvas for both graphs
+        self.canvas_cpu = FigureCanvasTkAgg(self.fig_cpu, master=graph_frame)
+        self.canvas_cpu.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.canvas_mem = FigureCanvasTkAgg(self.fig_mem, master=graph_frame)
+        self.canvas_mem.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         # Data Storage
         self.cpu_data = []
@@ -96,16 +98,26 @@ class CPUPage(tk.Frame):
             self.cpu_data.pop(0)
             self.mem_data.pop(0)
 
-        # Update the graph
-        self.ax.clear()
-        self.ax.plot(self.cpu_data, label='CPU Usage (%)', color='red')
-        self.ax.plot(self.mem_data, label='Memory Usage (%)', color='blue')
-        self.ax.set_ylim(0, 100)
-        self.ax.set_title("Real-Time CPU & Memory Usage")
-        self.ax.set_xlabel("Time (s)")
-        self.ax.set_ylabel("Usage (%)")
-        self.ax.legend()
-        self.canvas.draw()
+        # Update the CPU Graph
+        self.ax_cpu.clear()
+        self.ax_cpu.plot(self.cpu_data, label='CPU Usage (%)', color='red')
+        self.ax_cpu.set_ylim(0, 100)
+        self.ax_cpu.set_title("CPU Usage")
+        self.ax_cpu.set_xlabel("Time (s)")
+        self.ax_cpu.set_ylabel("Usage (%)")
+        self.ax_cpu.legend()
+
+        # Update the Memory Graph
+        self.ax_mem.clear()
+        self.ax_mem.plot(self.mem_data, label='Memory Usage (%)', color='blue')
+        self.ax_mem.set_ylim(0, 100)
+        self.ax_mem.set_title("Memory Usage")
+        self.ax_mem.set_xlabel("Time (s)")
+        self.ax_mem.set_ylabel("Usage (%)")
+        self.ax_mem.legend()
+
+        self.canvas_cpu.draw()
+        self.canvas_mem.draw()
 
         self.after(1000, self.update_graph)  # Update every second
 
