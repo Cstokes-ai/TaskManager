@@ -1,11 +1,10 @@
 import tkinter as tk
-import time
-
-from CPU import CPUPage
+from PIL import Image, ImageTk
 from Homepage import HomePage
 from Login import Login
-from Process import ProcessPage  # Add this import
-
+from CPU import CPUPage
+from Process import ProcessPage
+from graph import GraphTrends
 
 class MainWindow(tk.Tk):
     def __init__(self):
@@ -31,8 +30,7 @@ class MainWindow(tk.Tk):
         # Creates a gradient from dark blue to lighter blue
         self.canvas.create_rectangle(0, 0, 800, 600, fill="#1a1a2e", outline="")
         for i in range(600):
-            color = "#{:02x}{:02x}{:02x}".format(int(26 + i * 0.1), int(26 + i * 0.1),
-                                                 int(46 + i * 0.1))  # Soft gradient
+            color = "#{:02x}{:02x}{:02x}".format(int(26 + i * 0.1), int(26 + i * 0.1), int(46 + i * 0.1))  # Soft gradient
             self.canvas.create_line(0, i, 800, i, fill=color)
 
     def show_welcome_screen(self):
@@ -45,32 +43,25 @@ class MainWindow(tk.Tk):
         welcome_frame.pack(fill="both", expand=True)
 
         # App Logo (or placeholder text for now)
-        logo_label = tk.Label(welcome_frame, text="System Tracker", font=("Consolas", 36, "bold"), fg="white",
-                              bg="#1a1a2e")
+        logo_label = tk.Label(welcome_frame, text="System Tracker", font=("Consolas", 36, "bold"), fg="white", bg="#1a1a2e")
         logo_label.pack(pady=20)
 
         # App Slogan
-        slogan_label = tk.Label(welcome_frame, text="Monitor and Manage Your System's Performance",
-                                font=("Consolas", 16), fg="white", bg="#1a1a2e")
+        slogan_label = tk.Label(welcome_frame, text="Monitor and Manage Your System's Performance", font=("Consolas", 16), fg="white", bg="#1a1a2e")
         slogan_label.pack(pady=10)
 
         # Feature Overview Section
-        feature_label = tk.Label(welcome_frame, text="Features:", font=("Consolas", 18, "bold"), fg="white",
-                                 bg="#1a1a2e")
+        feature_label = tk.Label(welcome_frame, text="Features:", font=("Consolas", 18, "bold"), fg="white", bg="#1a1a2e")
         feature_label.pack(pady=10)
 
-        feature_description = tk.Label(welcome_frame,
-                                       text="• Track CPU and Memory Usage\n• Manage Running Processes\n• Real-time System Monitoring",
-                                       font=("Consolas", 14), fg="white", bg="#1a1a2e", justify="left")
+        feature_description = tk.Label(welcome_frame, text="• Track CPU and Memory Usage\n• Manage Running Processes\n• Real-time System Monitoring", font=("Consolas", 14), fg="white", bg="#1a1a2e", justify="left")
         feature_description.pack(pady=10)
 
         # Start animated demo
         self.start_demo(welcome_frame)
 
         # Login button with Consolas font and a modern, corporate style
-        login_button = tk.Button(welcome_frame, text="Login", command=lambda: self.show_frame("Login"),
-                                 font=("Consolas", 14, "bold"), fg="white", bg="#007BFF",
-                                 relief="flat", padx=20, pady=10)
+        login_button = tk.Button(welcome_frame, text="Login", command=lambda: self.show_frame("Login"), font=("Consolas", 14, "bold"), fg="white", bg="#007BFF", relief="flat", padx=20, pady=10)
         login_button.pack(pady=30)
 
         # Hover effect simulation for the login button (change color when hovered over)
@@ -78,17 +69,23 @@ class MainWindow(tk.Tk):
         login_button.bind("<Leave>", lambda e: login_button.config(bg="#007BFF"))
 
         # Call to action
-        call_to_action = tk.Label(welcome_frame, text="Get Started with System Monitoring!",
-                                  font=("Consolas", 16, "bold"), fg="white", bg="#1a1a2e")
+        call_to_action = tk.Label(welcome_frame, text="Get Started with System Monitoring!", font=("Consolas", 16, "bold"), fg="white", bg="#1a1a2e")
         call_to_action.pack(pady=20)
+
+        # Add button to navigate to GraphTrends page
+        graph_button = tk.Button(welcome_frame, text="View Graph Trends", command=lambda: self.show_frame("GraphTrends"), font=("Consolas", 14, "bold"), fg="white", bg="#007BFF", relief="flat", padx=20, pady=10)
+        graph_button.pack(pady=10)
+
+        # Hover effect simulation for the graph button (change color when hovered over)
+        graph_button.bind("<Enter>", lambda e: graph_button.config(bg="#0056b3"))
+        graph_button.bind("<Leave>", lambda e: graph_button.config(bg="#007BFF"))
 
         self.frames["Welcome"] = welcome_frame
         welcome_frame.tkraise()
 
     def start_demo(self, frame):
         # Create a progress bar for animated demo (simulating system monitoring)
-        self.progress_label = tk.Label(frame, text="System Monitoring Demo", font=("Consolas", 18), fg="white",
-                                       bg="#1a1a2e")
+        self.progress_label = tk.Label(frame, text="System Monitoring Demo", font=("Consolas", 18), fg="white", bg="#1a1a2e")
         self.progress_label.pack(pady=20)
 
         self.progress_bar = tk.Canvas(frame, width=300, height=30, bg="#444444", bd=0, highlightthickness=0)
@@ -108,6 +105,30 @@ class MainWindow(tk.Tk):
         # Update the width of the progress bar
         self.progress_bar.coords(self.progress_fill, 0, 0, width, 30)
 
+        # After progress bar is full (100%), display the CPU image
+        if width == 300:
+            self.show_cpu_image()
+
+    def show_cpu_image(self):
+        # Load the CPU image (simulated with a placeholder image here)
+        cpu_img = Image.open("C:\\Users\\corne\\Downloads\\lRrjt.png")  # Replace with actual image path
+
+        # Resize image to make it smaller
+        cpu_img = cpu_img.resize((100, 100))
+
+        # Convert image to Tkinter-compatible format
+        cpu_img_tk = ImageTk.PhotoImage(cpu_img)
+
+        # Create label to display the image
+        cpu_label = tk.Label(self.container, image=cpu_img_tk, bg="#1a1a2e")
+        cpu_label.place(x=50, y=400)  # Adjust placement as needed
+
+        # Keep a reference to avoid garbage collection
+        cpu_label.image = cpu_img_tk
+
+        # Store the label in the frames dictionary to manage its lifecycle
+        self.frames["CPUImage"] = cpu_label
+
     def show_frame(self, page_name):
         # Destroy the current frame if it exists
         for frame in self.frames.values():
@@ -122,12 +143,13 @@ class MainWindow(tk.Tk):
         elif page_name == "CPUPage":
             frame = CPUPage(self.container, self)
         elif page_name == "Process":
-            frame = ProcessPage(self.container, self)  # Add this line
+            frame = ProcessPage(self.container, self)
+        elif page_name == "GraphTrends":
+            frame = GraphTrends(self.container, self)
 
         self.frames[page_name] = frame
         frame.pack(fill="both", expand=True)
         frame.tkraise()
-
 
 if __name__ == "__main__":
     app = MainWindow()
