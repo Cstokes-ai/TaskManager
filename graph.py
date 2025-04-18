@@ -2,6 +2,7 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import psutil
+from tkinter import Button
 
 class GraphTrends(tk.Frame):
     def __init__(self, parent, controller=None):
@@ -18,8 +19,17 @@ class GraphTrends(tk.Frame):
         self.ax.spines[:].set_color('#888888')
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
         self.canvas.get_tk_widget().pack(fill="both", expand=True)
+
+        # Add the "Return to Homepage" button
+        self.return_button = Button(self, text="Return to Homepage", command=self.go_to_homepage, bg="#007BFF", fg="white", font=("Consolas", 12, "bold"))
+        self.return_button.pack(pady=10)
+
         self.plot_data()
         self.after(5000, self.update_graph)  # Schedule the update_graph method to be called after 5 seconds
+
+    def go_to_homepage(self):
+        if self.controller:
+            self.controller.show_frame("HomePage")  # Ensure this matches the name of your HomePage class
 
     def stats(self):
         cpu = psutil.cpu_percent(interval=1)

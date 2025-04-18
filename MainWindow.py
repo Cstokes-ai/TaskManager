@@ -110,18 +110,20 @@ class MainWindow(tk.Tk):
             self.show_cpu_image()
 
     def show_cpu_image(self):
-        # Load the CPU image (simulated with a placeholder image here)
-        cpu_img = Image.open("C:\\Users\\corne\\Downloads\\lRrjt.png")  # Replace with actual image path
+        # Load the CPU image
+        cpu_img = Image.open("C:\\Users\\corne\\Downloads\\lRrjt.png")  # Update path if needed
 
-        # Resize image to make it smaller
-        cpu_img = cpu_img.resize((100, 100))
+        # Resize image to a larger size (e.g., 200x200)
+        cpu_img = cpu_img.resize((200, 200), Image.Resampling.LANCZOS)
 
         # Convert image to Tkinter-compatible format
         cpu_img_tk = ImageTk.PhotoImage(cpu_img)
 
         # Create label to display the image
-        cpu_label = tk.Label(self.container, image=cpu_img_tk, bg="#1a1a2e")
-        cpu_label.place(x=50, y=400)  # Adjust placement as needed
+        cpu_label = tk.Label(self.frames["Welcome"], image=cpu_img_tk, bg="#1a1a2e")
+
+        # Center it below the progress bar
+        cpu_label.pack(pady=(10, 0))  # Add some vertical space after the progress bar
 
         # Keep a reference to avoid garbage collection
         cpu_label.image = cpu_img_tk
