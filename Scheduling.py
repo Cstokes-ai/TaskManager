@@ -1,53 +1,59 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
 import psutil
-import threading
-import time
 
 class SchedulingPage(tk.Frame):
-    def __init__(self, parent):
-        super().__init__(parent, bg='navy')
+    def __init__(self, parent, controller):
+        super().__init__(parent, bg='#2E2E2E')  # Dark gray background
+        self.controller = controller
         self.create_widgets()
         self.update_table()
 
     def create_widgets(self):
-        title = tk.Label(self, text="Live Scheduling Snapshot", font=("Arial", 20, "bold"), fg="white", bg="navy")
-        title.pack(pady=10)
+        # Title Label
+        tk.Label(self, text="Scheduling Page", font=("Arial", 16, "bold"), fg="white", bg="#2E2E2E").pack(pady=10)
 
-        columns = ("PID", "Name", "Status", "Priority", "CPU Core", "Context Switches")
-        self.tree = ttk.Treeview(self, columns=columns, show='headings', height=20)
-
+        # Treeview for process data
+        columns = ("PID", "Name", "Status", "Priority", "CPU", "Context Switches")
+        self.tree = ttk.Treeview(self, columns=columns, show="headings", height=15)
         for col in columns:
             self.tree.heading(col, text=col)
             self.tree.column(col, anchor=tk.CENTER)
-
         self.tree.pack(padx=20, pady=10, fill=tk.BOTH, expand=True)
 
+        # Treeview style
         style = ttk.Style()
         style.theme_use("default")
         style.configure("Treeview", background="#1e1e2f", foreground="white", fieldbackground="#1e1e2f", rowheight=25)
         style.map("Treeview", background=[('selected', '#3366cc')])
 
+        # Button frame
         button_frame = tk.Frame(self, bg='navy')
         button_frame.pack(pady=10)
 
+        # Modify Priority Button
         modify_btn = tk.Button(button_frame, text="Change Priority (Nice)", command=self.change_priority, font=("Arial", 12))
         modify_btn.pack(padx=10, side=tk.LEFT)
 
+        # Placeholder Label
         self.queue_label = tk.Label(self, text="[Process Queue View Placeholder]", font=("Arial", 12), fg="white", bg="navy")
         self.queue_label.pack(pady=10)
 
     def update_table(self):
+        # Clear existing rows
         for row in self.tree.get_children():
             self.tree.delete(row)
 
-        for proc in psutil.process_iter(['pid', 'name', 'status', 'nice', 'cpu_num', 'num_ctx_switches']):
+        # Populate table with process data
+        for proc in psutil.process_iter(['pid', 'name', 'status', 'nice', 'num_ctx_switches']):
             try:
                 pid = proc.info['pid']
                 name = proc.info['name']
                 status = proc.info['status']
                 nice = proc.info['nice']
-                cpu = proc.info['cpu_num']
+                # Use cpu_affinity() as a fallback if cpu_num is unavailable
+                cpu = proc.cpu_num if hasattr(proc, 'cpu_num') else (
+                    proc.cpu_affinity()[0] if proc.cpu_affinity() else "N/A")
                 ctx = proc.info['num_ctx_switches']
                 ctx_str = f"Vol: {ctx.voluntary}, Invol: {ctx.involuntary}" if ctx else "N/A"
 
@@ -55,8 +61,8 @@ class SchedulingPage(tk.Frame):
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
 
-        self.after(3000, self.update_table)  # Update every 3 seconds
-
+        # Schedule periodic updates
+        self.after(3000, self.update_table)
     def change_priority(self):
         try:
             selected = self.tree.focus()

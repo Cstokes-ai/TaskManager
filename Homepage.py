@@ -27,12 +27,11 @@ class HomePage(tk.Frame):
                   width=20).pack(pady=5)  # Renamed button
         tk.Button(sidebar, text="Process", font=btn_font, command=lambda: self.controller.show_frame("Process"),
                   width=20).pack(pady=5)
-        tk.Button(sidebar, text="Scheduling", font=btn_font, command=lambda: self.controller.show_frame("Scheduling"),
-                  width=20).pack(pady=5)
         tk.Button(sidebar, text="Graph Trends", font=btn_font,
                   command=lambda: self.controller.show_frame("GraphTrends"),
                   width=20).pack(pady=5)
-
+        tk.Button(sidebar, text="Scheduling", font=btn_font, command=lambda: self.controller.show_frame("Scheduling"),
+                    width=20).pack(pady=5)
 
         tk.Button(sidebar, text="Logout", font=btn_font, command=self.logout, width=20).pack(pady=5)
 

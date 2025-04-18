@@ -5,6 +5,7 @@ from Login import Login
 from CPU import CPUPage
 from Process import ProcessPage
 from graph import GraphTrends
+from Scheduling import SchedulingPage
 
 class MainWindow(tk.Tk):
     def __init__(self):
@@ -132,27 +133,34 @@ class MainWindow(tk.Tk):
         self.frames["CPUImage"] = cpu_label
 
     def show_frame(self, page_name):
-        # Destroy the current frame if it exists
+        # Hide all frames
         for frame in self.frames.values():
-            frame.destroy()
-        self.frames.clear()
+            frame.pack_forget()
 
-        # Create and store a new instance of the requested page
-        if page_name == "HomePage":
-            frame = HomePage(self.container, self)
-        elif page_name == "Login":
-            frame = Login(self.container, self)
-        elif page_name == "CPUPage":
-            frame = CPUPage(self.container, self)
-        elif page_name == "Process":
-            frame = ProcessPage(self.container, self)
-        elif page_name == "GraphTrends":
-            frame = GraphTrends(self.container, self)
+        # Check if the requested frame already exists
+        if page_name not in self.frames:
+            # Create and store a new instance of the requested page
+            if page_name == "HomePage":
+                frame = HomePage(self.container, self)
+            elif page_name == "Login":
+                frame = Login(self.container, self)
+            elif page_name == "CPUPage":
+                frame = CPUPage(self.container, self)
+            elif page_name == "Process":
+                frame = ProcessPage(self.container, self)
+            elif page_name == "GraphTrends":
+                frame = GraphTrends(self.container, self)
+            elif page_name == "Scheduling":
+                frame = SchedulingPage(self.container, self)
+            else:
+                raise ValueError(f"Unknown page: {page_name}")
 
-        self.frames[page_name] = frame
+            self.frames[page_name] = frame
+
+        # Show the requested frame
+        frame = self.frames[page_name]
         frame.pack(fill="both", expand=True)
         frame.tkraise()
-
 if __name__ == "__main__":
     app = MainWindow()
     app.mainloop()
