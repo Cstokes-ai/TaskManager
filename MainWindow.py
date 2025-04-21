@@ -1,7 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from Homepage import HomePage
-from Login import Login
 from CPU import CPUPage
 from Process import ProcessPage
 from graph import GraphTrends
@@ -61,25 +60,17 @@ class MainWindow(tk.Tk):
         # Start animated demo
         self.start_demo(welcome_frame)
 
-        # Login button with Consolas font and a modern, corporate style
-        login_button = tk.Button(welcome_frame, text="Login", command=lambda: self.show_frame("Login"), font=("Consolas", 14, "bold"), fg="white", bg="#007BFF", relief="flat", padx=20, pady=10)
-        login_button.pack(pady=30)
-
-        # Hover effect simulation for the login button (change color when hovered over)
-        login_button.bind("<Enter>", lambda e: login_button.config(bg="#0056b3"))
-        login_button.bind("<Leave>", lambda e: login_button.config(bg="#007BFF"))
-
         # Call to action
         call_to_action = tk.Label(welcome_frame, text="Get Started with System Monitoring!", font=("Consolas", 16, "bold"), fg="white", bg="#1a1a2e")
         call_to_action.pack(pady=20)
 
-        # Add button to navigate to GraphTrends page
-        graph_button = tk.Button(welcome_frame, text="View Graph Trends", command=lambda: self.show_frame("GraphTrends"), font=("Consolas", 14, "bold"), fg="white", bg="#007BFF", relief="flat", padx=20, pady=10)
-        graph_button.pack(pady=10)
+        # Add "LETS GO" button to navigate to HomePage
+        lets_go_button = tk.Button(welcome_frame, text="LETS GO", command=lambda: self.show_frame("HomePage"), font=("Consolas", 14, "bold"), fg="white", bg="#28a745", relief="flat", padx=20, pady=10)
+        lets_go_button.pack(pady=20)
 
-        # Hover effect simulation for the graph button (change color when hovered over)
-        graph_button.bind("<Enter>", lambda e: graph_button.config(bg="#0056b3"))
-        graph_button.bind("<Leave>", lambda e: graph_button.config(bg="#007BFF"))
+        # Hover effect for the "LETS GO" button
+        lets_go_button.bind("<Enter>", lambda e: lets_go_button.config(bg="#218838"))
+        lets_go_button.bind("<Leave>", lambda e: lets_go_button.config(bg="#28a745"))
 
         self.frames["Welcome"] = welcome_frame
         welcome_frame.tkraise()
@@ -142,8 +133,6 @@ class MainWindow(tk.Tk):
             # Create and store a new instance of the requested page
             if page_name == "HomePage":
                 frame = HomePage(self.container, self)
-            elif page_name == "Login":
-                frame = Login(self.container, self)
             elif page_name == "CPUPage":
                 frame = CPUPage(self.container, self)
             elif page_name == "Process":
@@ -161,6 +150,7 @@ class MainWindow(tk.Tk):
         frame = self.frames[page_name]
         frame.pack(fill="both", expand=True)
         frame.tkraise()
+
 if __name__ == "__main__":
     app = MainWindow()
     app.mainloop()
