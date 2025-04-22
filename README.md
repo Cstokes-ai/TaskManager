@@ -33,15 +33,17 @@ pip install tk psutil matplotlib
 ### Running the Application
 Run the main application using:
 ```bash
-python main.py
+python TaskMain.py
 ```
+#To build the application, use:
+pyinstaller --onefile --windowed TaskMain.py
+
 
 ## Usage
 1. Launch the application.
-2. Log in using your credentials.
-3. Navigate using the sidebar to monitor CPU, memory, and processes.
-4. Use the refresh button to update metrics.
-5. Search or terminate processes as needed.
+2. Navigate using the sidebar to monitor CPU, memory, and processes.
+3. Use the refresh button to update metrics.
+4. Search or terminate processes as needed.
 
 ## License
 This project is for personal or internal use only and is open source.
