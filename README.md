@@ -17,11 +17,14 @@ This project is a Python-based system tracker and task manager with a graphical 
 - **Navigation Panel**: Provides quick access to different sections.
 
 ## File Structure
-- `main.py`: Initializes the main application and manages navigation.
-- `navigation.py`: Handles the sidebar for switching between different pages.
-- `pages.py`: Contains different UI sections (CPU, Memory, Process, Scheduling, Home).
-- `graph.py`: Implements real-time data visualization.
-- `auth.py`: Manages user login and authentication.
+- `TaskMain.py`: Initializes the main application and manages navigation.
+- `MainWindow.py`: Opens the main window with a welcome screen, providing a start to the application.
+- `Homepage.py`: Opens the application's dashboard. provides a simple graphical overview of what's expected in the application.
+- `CPU.py`: Gathers information from the system. System information includes CPU, Memory, and system storage.
+- `Process.py`: Gathers information about processes. Gives the user the ability to shut down individual processes.
+- `Scheduling.py`: Opens a scheduling page detailing the scheduling algorithm used, which processes are currently running/stopped, their priority, and which ones use the most space.
+- `Graphy.py:
+
 
 ## Installation
 ### Prerequisites
